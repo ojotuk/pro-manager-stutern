@@ -27,7 +27,7 @@ server.use((error, req, res, next) => {
     }
   })
 })
-const PORT = process.env.PORT || 500
+const PORT = process.env.PORT || 7000
 
 // Read port and host from the configuration file
-server.listen(PORT, console.info('Express listening on port ', PORT))
+server.listen(PORT, ()=>console.info('Express listening on port ', PORT))
