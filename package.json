@@ -2,7 +2,7 @@
   "name": "hr-paragon",
   "version": "1.0.0",
   "description": "Application for employee management",
-  "main": "index.js",
+  "main": "main.js",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.2",
