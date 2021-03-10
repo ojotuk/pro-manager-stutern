@@ -13,7 +13,7 @@ const config = require('./config')
 const app = express()
 
 // Middleware
-app.use(bodyParser.json())
+app.use(express.json())
 app.use(cors({ credentials: true }))
 app.use(authMiddleware.initialize)
 

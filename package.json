@@ -2,8 +2,11 @@
   "name": "hr-paragon",
   "version": "1.0.0",
   "description": "Application for employee management",
+  "engines": {
+    "node": "12.18.2"
+  },
   "main": "app.js",
-  "license": "MIT",
+  "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
     "cookie": "^0.4.1",
@@ -16,6 +19,7 @@
     "mongodb": "^3.6.4",
     "mongoose": "^5.11.19",
     "mongoose-timestamp": "^0.6.0",
+    "now": "^9.2.7",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^1.0.0",
     "passport-jwt": "^3.0.1",
@@ -32,15 +36,10 @@
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
     "nodemon": "^1.14.10",
-    "now": "^9.2.7",
     "prettier": "^1.10.2"
   },
   "scripts": {
     "dev": "nodemon index.js",
-    "drop": "node models/drop.js",
-    "seed": "node models/seed.js",
-    "start": "node index.js",
-    "deploy": "now -E production.env",
-    "rmdeploy": "now rm room-booking-system"
+    "start": "node index.js"
   }
 }
