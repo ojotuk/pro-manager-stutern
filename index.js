@@ -6,21 +6,22 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const authMiddleware = require('./middleware/auth')
-
+const dotenv = require('dotenv')
+dotenv.config()
 const config = require('./config')
 
-const server = express()
+const app = express()
 
 // Middleware
-server.use(bodyParser.json())
-server.use(cors({ credentials: true }))
-server.use(authMiddleware.initialize)
+app.use(bodyParser.json())
+app.use(cors({ credentials: true }))
+app.use(authMiddleware.initialize)
 
 // Routes
-server.use([require('./routes/auth'), require('./routes/rooms'), require('./routes/validation'),require('./routes/test')])
+app.use([require('./routes/auth'), require('./routes/rooms'), require('./routes/validation'),require('./routes/test')])
 
 // Error handling
-server.use((error, req, res, next) => {
+app.use((error, req, res, next) => {
   res.json({
     error: {
       message: error.message
@@ -30,4 +31,4 @@ server.use((error, req, res, next) => {
 const PORT = process.env.PORT || 7000
 
 // Read port and host from the configuration file
-server.listen(PORT, ()=>console.info('Express listening on port ', PORT))
+app.listen(PORT, ()=>console.log('Express listening on port ', PORT))
