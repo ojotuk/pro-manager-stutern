@@ -5,7 +5,7 @@ const {
   signJWTForUser
 } = require('../middleware/auth')
 
-const router = new express.Router()
+const router = express.Router()
 
 // Sign up
 router.post('/auth/sign-up', signUp, signJWTForUser)

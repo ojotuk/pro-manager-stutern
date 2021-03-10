@@ -2,7 +2,7 @@ const express = require('express')
 
 const { requireJWT } = require('../middleware/auth')
 
-const router = new express.Router()
+const router = express.Router()
 
 router.get('/validation',requireJWT,(req, res) => {
   console.log(req.user['_doc'].userType, 'valid');
