@@ -27,12 +27,7 @@ server.use((error, req, res, next) => {
     }
   })
 })
+const PORT = process.env.PORT || 500
 
 // Read port and host from the configuration file
-server.listen(config.port, error => {
-  if (error) {
-    console.error('Error starting', error)
-  } else {
-    console.info('Express listening on port ', config.port)
-  }
-})
+server.listen(PORT, console.info('Express listening on port ', PORT))
