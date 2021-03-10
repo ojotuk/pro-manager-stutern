@@ -8,7 +8,6 @@ const cors = require('cors')
 const authMiddleware = require('./middleware/auth')
 const dotenv = require('dotenv')
 dotenv.config()
-const config = require('./config')
 
 const app = express()
 
