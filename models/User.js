@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
   emailVerified:{
     type:Boolean,
     default:false
+  },
+  clientRefNo:{
+    type:String,
+    required:true
   }
 })
 
