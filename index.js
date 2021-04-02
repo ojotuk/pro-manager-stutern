@@ -24,6 +24,7 @@ app.use([
   require("./routes/messenger"),
   require("./routes/test"),
   require("./routes/clients/admin/employees"),
+  require("./routes/clients/admin/task"),
 ]);
 
 // Error handling

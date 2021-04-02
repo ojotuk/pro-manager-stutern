@@ -58,6 +58,10 @@ const profileSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  task: {
+    type: Array,
+    default: [],
+  },
   permissions: {
     type: Array,
     default: [],
