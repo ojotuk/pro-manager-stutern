@@ -2,7 +2,7 @@ const express = require("express");
 const moment = require("moment");
 const momentTimezone = require("moment-timezone");
 const { requireJWT } = require("../../../middleware/auth");
-const Task = require("../../../models/task-manager");
+const Task = require("../../../models/taskManager");
 const Profile = require("../../../models/Profiles");
 const router = express.Router();
 
