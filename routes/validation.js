@@ -22,6 +22,15 @@ router.get('/validation-01',requireJWT,(req, res) => {
   res.json({status:200,message:'you are signed in'})
 
   })
+router.get('/validation-05',requireJWT,(req, res) => {
+  // console.log(req.user['_doc'].userType, 'valid');
+
+  //Ensure this user a client, check client code
+  if(req.user['_doc'].userType!='CL05') return res.json({status:401,message:'relogin'});
+  //
+  res.json({status:200,message:'you are signed in'})
+
+  })
 
 
 module.exports = router

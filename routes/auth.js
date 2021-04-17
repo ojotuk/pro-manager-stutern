@@ -4,7 +4,8 @@ const {
   signUpClientEmployees,
   signIn,
   requireJWT,
-  signJWTForUser
+  signJWTForUser,
+  signJWTForUserEmployee
 } = require('../middleware/auth')
 
 const router = express.Router()
@@ -18,5 +19,8 @@ router.post('/auth/sign-up/004/employees', requireJWT,signUpClientEmployees)
 
 // Sign in client
 router.post('/auth', signIn, signJWTForUser)
+// Sign in client
+router.post('/auth/client/005', signIn, signJWTForUserEmployee);
+
 
 module.exports = router

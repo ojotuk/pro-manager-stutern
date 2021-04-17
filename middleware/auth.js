@@ -114,21 +114,6 @@ const initClientEmployeeProfle = (req,res)=>{
     return worker
   })
   
-  // const profile = new Profile( {
-  //   email: req.body.email,
-  //   emailVerified:false,
-  //   name: req.body.name,
-  //   userType:'CL05',
-  //   employeeID:`CL05-${generateID}`,
-  //   clientRefNo:req.user.clientRefNo
-  // })
-  // profile.save((err,doc)=>{
-  //   console.log(doc)
-  // })
-
-  // Profile.create(employees).then(doc=>{
-  //   console.log(doc)
-  // })
 }
 
 /*                  SIGN JWTS                        */
@@ -136,9 +121,36 @@ const initClientEmployeeProfle = (req,res)=>{
 const signJWTForUser = (req, res) => {
   // console.log('signing jwt', req.user)
   const user = req.user;
+  const {email,userType}= user;
+// console.log(userType)
+  if(userType !=="CL04") return res.status(400).json({msg:'not authorized'})
+  const token = JWT.sign(
+    {
+      email: email,
+      userType:userType
+    },
+    jwtSecret,
+    {
+      algorithm: jwtAlgorithm,
+      expiresIn: jwtExpiresIn,
+      subject: user._id.toString(),
+    }
+  );
+  // console.log(token)
+  res.json({ token })
+
+};
+//Clients Employee
+const signJWTForUserEmployee = (req, res) => {
+  // console.log('signing jwt', req.body)
+  const user = req.user;
+  const {email,userType}= user;
+// console.log(userType)
+  if(userType !=="CL05") return res.status(400).json({msg:'not authorized'})
   const token = JWT.sign(
     {
       email: user.email,
+      userType:userType
     },
     jwtSecret,
     {
@@ -182,4 +194,5 @@ module.exports = {
   signIn: passport.authenticate("local", { session: false }),
   requireJWT: passport.authenticate("jwt", { session: false }),
   signJWTForUser,
+  signJWTForUserEmployee
 };
