@@ -2,7 +2,6 @@ const mongoose = require('./init')
 const passportLocalMongoose = require('passport-local-mongoose')
 
 const userSchema = new mongoose.Schema({
- name:{type:String},
   email: { type: String, index: true, unique:true },
   userType:{
     type:String,
@@ -12,7 +11,7 @@ const userSchema = new mongoose.Schema({
     type:Boolean,
     default:false
   },
-  clientRefNo:{
+  companyRefNo:{
     type:String,
     required:true
   }

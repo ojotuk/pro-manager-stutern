@@ -1,9 +1,10 @@
 const Leaves = require('./Leaves')
+const Company= require('./Clients')
 const mongoose = require("./init");
 const passportLocalMongoose = require("passport-local-mongoose");
 const { Schema } = require("mongoose");
 
-const profileSchema = new mongoose.Schema({
+const employeeSchema = new mongoose.Schema({
   address: {
     type: String,
     default: "",
@@ -20,7 +21,7 @@ const profileSchema = new mongoose.Schema({
       paymentType: "",
     },
   },
-  clientRefNo:{
+  companyRefNo:{
     type: String,
     required: true,
   },
@@ -29,6 +30,10 @@ const profileSchema = new mongoose.Schema({
     type:Schema.Types.ObjectId,
     ref:'Leaves'
   }],
+  company:{
+    type:Schema.Types.ObjectId,
+    ref:'Company'
+  },
   userType: {
     type: String,
     required: true,
@@ -87,4 +92,4 @@ const profileSchema = new mongoose.Schema({
 });
 
 
-const Profile = (module.exports = mongoose.model("Profile", profileSchema));
+const Employees = (module.exports = mongoose.model("Employees", employeeSchema));

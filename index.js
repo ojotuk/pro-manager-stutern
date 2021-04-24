@@ -16,10 +16,10 @@ app.use(express.json());
 app.use(cors({ credentials: true }));
 app.use(authMiddleware.initialize);
 
+
 // Routes
 app.use([
   require("./routes/auth"),
-  require("./routes/rooms"),
   require("./routes/validation"),
   require("./routes/messenger"),
   require("./routes/test"),

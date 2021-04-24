@@ -2,8 +2,10 @@ const passport = require("passport");
 const JWT = require("jsonwebtoken");
 const PassportJWT = require("passport-jwt");
 const User = require("../models/User");
-const Profile = require("../models/Profiles")
+const Profile = require("../models/Profiles");
+const Client = require("../models/Clients");
 const randomstring = require("randomstring");
+const Employees = require("../models/Employees");
 const jwtSecret = process.env.JWT_SECRET;
 // const jwtAlgorithm = process.env.JWT_ALGORITHM
 const jwtAlgorithm = "HS256";
@@ -11,123 +13,107 @@ const jwtExpiresIn = process.env.JWT_EXPIRES_IN;
 
 passport.use(User.createStrategy());
 
-
 /*                  SIGNUPs                         */
-const signUp = (req, res, next) => {
+// Client/Company
+const signUp = async (req, res, next) => {
   if (!req.body.email || !req.body.password) {
     res.status(400).send("No username or password provided.");
   }
 
-  const generateRefNo=randomstring.generate({
+  // check if email exist
+  const exist = await User.findOne({ email: req.body.email });
+  if (exist) return res.status(401).json({ msg: "account exist" });
+
+  // Email has not been used
+
+  const generateRefNo = randomstring.generate({
     length: 4,
-    charset: 'numeric',
-    readable:true
+    charset: "numeric",
+    readable: true,
   });
 
   const user = {
     email: req.body.email,
-    name: req.body.name,
-    userType:'CL04',
-    clientRefNo:`HR-CL-${generateRefNo}`,
-    emailVerified:false
+    userType: "CL04",
+    companyRefNo: `HR-CL-${generateRefNo}`,
+    emailVerified: false,
   };
-  const userInstance = new User(user)
+  const userInstance = new User(user);
   User.register(userInstance, req.body.password, (error, user) => {
     if (error) {
       next(error);
       return;
     }
   });
-  const profileInstance = new Profile({isSupper:true,...user});
-    profileInstance.save((err,doc)=>{
-      if (err) {
-        next(error);
-        return;
-      }
-    })
+  const clientInstance = new Client(userInstance);
+  clientInstance.companyName = req.body.companyName;
+  clientInstance.companyPhone = req.body.companyPhone;
+  clientInstance.companyEmail = req.body.email;
+  clientInstance.companyRefNo = userInstance.companyRefNo;
+  clientInstance.state = req.body.state;
+  clientInstance.numberOfEmployee = "50";
+  clientInstance.save((error, doc) => {
+    if (error) {
+      next(error);
+      return;
+    }
+  });
   req.user = userInstance;
   next();
 };
 
-//client sign up many employee
-const signUpClientEmployees = (req, res) => {
-  if (!req.body.employees || req.body.employees.length<0) {
-    res.status(400).send("No username or password provided.");
-  }
-  let employees = req.body.employees;
-  // console.log(employees)
-  const errorBag=[]
 
-  const generateID=()=>randomstring.generate({
-    length: 6,
-    charset: 'numeric',
-    readable:true
-  });
+// client action for adding an employee
+const signUpEmployee= async (req, res) => {
+  const generateID = () =>
+    randomstring.generate({
+      length: 4,
+      charset: "alphanumeric",
+      readable: true,
+    });
+    const company = await Client.findOne({companyEmail:req.user.email});
 
-  for(worker of employees){
-    const user = {
-      email: worker.email,
-      name: worker.name,
-      userType:'CL05',
-      employeeID:`CL05-${generateID()}`,
-      clientRefNo:req.user.clientRefNo
+    let newEmployee = {
+      email:req.body.email,
+      fullname: req.body.fullname,
+      userType: "CL05",
+      employeeID: `CL05-${generateID()}`,
+      companyRefNo: company.companyRefNo,
+      emailVerified:false,
+      company:company._id           //foreign key
     }
-    const userInstance = new User(user);
-    User.register(userInstance, worker.password, (error, user) => {
+//create auth account for signing in
+    const userInstance = new User(newEmployee);
+    User.register(userInstance, req.body.password, (error, user) => {
       if (error) {
-        let errItem = {affectedUser:worker.name}
-        errorBag.push(errItem);
-        return;
+       
+        return res.status(500);
       }
     });
-    const profileInstance = new Profile({isSupper:false,surname:worker.surname,firstName:worker.firstName,...user});
-    profileInstance.save((error,doc)=>{
-      if (error) {
-        let errItem = {affectedUser:worker.name}
-        errorBag.push(errItem);
-        return;
-      }
-    })
-  }
 
-  if(errorBag.length>0){
-    res.json({status:400,users:errorBag})
-  }else{
-    res.json({status:200,})
-  }
-  // req.user = user;
-  // next();
+    const employeeInstance = new Employees(newEmployee)
+    const employed = await employeeInstance.save();
+
+    company.employees.push(employed._id);
+    await company.save();
+    res.send("all good")
+
+
 };
-const initClientEmployeeProfle = (req,res)=>{
-  //employees to be an array
-  let employees = req.body.employees;
-  const generateID=()=>randomstring.generate({
-    length: 4,
-    charset: 'alphabetic',
-    readable:true
-  });
-
-  employees = employees.map(worker=>{
-    worker.userType='CL05';
-    worker.clientRefNo=req.user.clientRefNo;
-    worker.employeeID=`CL05-${generateID()}`;
-    return worker
-  })
-  
-}
 
 /*                  SIGN JWTS                        */
 //Clients
-const signJWTForUser = (req, res) => {
+const signJWTForCompany = (req, res) => {
   // console.log('signing jwt', req.user)
   const user = req.user;
-  const {email,userType}= user;
-// console.log(userType)
-  if(userType !=="CL04") return res.status(400).json({msg:'not authorized'})
+  const { email, userType } = user;
+  // console.log(userType)
+  if (userType !== "CL04")
+    return res.status(400).json({ msg: "not authorized" });
   const token = JWT.sign(
     {
       email: email,
-      userType:userType
+      userType: userType,
     },
     jwtSecret,
     {
@@ -137,20 +123,19 @@ const signJWTForUser = (req, res) => {
     }
   );
   // console.log(token)
-  res.json({ token })
-
+  res.json({ token });
 };
 //Clients Employee
 const signJWTForUserEmployee = (req, res) => {
   // console.log('signing jwt', req.body)
-  const user = req.user;
-  const {email,userType}= user;
-// console.log(userType)
-  if(userType !=="CL05") return res.status(400).json({msg:'not authorized'})
+  const { email, userType } = req.user;
+  // console.log(userType)
+  if (userType !== "CL05")
+    return res.status(400).json({ msg: "not authorized" });
   const token = JWT.sign(
     {
-      email: user.email,
-      userType:userType
+      email: email,
+      userType: userType,
     },
     jwtSecret,
     {
@@ -160,8 +145,7 @@ const signJWTForUserEmployee = (req, res) => {
     }
   );
   // console.log(token)
-  res.json({ token })
-
+  res.json({ token });
 };
 
 passport.use(
@@ -190,9 +174,9 @@ passport.use(
 module.exports = {
   initialize: passport.initialize(),
   signUp,
-  signUpClientEmployees,
+  signUpEmployee,
   signIn: passport.authenticate("local", { session: false }),
   requireJWT: passport.authenticate("jwt", { session: false }),
-  signJWTForUser,
-  signJWTForUserEmployee
+  signJWTForCompany,
+  signJWTForUserEmployee,
 };
