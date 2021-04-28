@@ -19,7 +19,8 @@ const getEmployee = async (req,res)=>{
     // const {id} = req.params;
     const id = "608451938b3468065806d85d"
     // console.log(id);
-    const user =await Employees.findOne({_id:id}).populate('company')
+    const user =await Employees.findOne({_id:id}).populate('company');
+    
        
         res.json({profile:user, code:200});
     
