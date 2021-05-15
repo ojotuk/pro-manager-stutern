@@ -16,16 +16,14 @@ passport.use(User.createStrategy());
 /*                  SIGNUPs                         */
 // Client/Company
 const signUp = async (req, res, next) => {
-  if (!req.body.email || !req.body.password) {
+  if (!req.body.companyEmail || !req.body.companyPhone) {
     res.status(400).send("No username or password provided.");
   }
-
   // check if email exist
-  const exist = await User.findOne({ email: req.body.email });
+  const exist = await User.findOne({ email: req.body.companyEmail });
   if (exist) return res.status(401).json({ msg: "account exist" });
 
   // Email has not been used
-
   const generateRefNo = randomstring.generate({
     length: 4,
     charset: "numeric",
@@ -33,7 +31,7 @@ const signUp = async (req, res, next) => {
   });
 
   const user = {
-    email: req.body.email,
+    email: req.body.companyEmail,
     userType: "CL04",
     companyRefNo: `HR-CL-${generateRefNo}`,
     emailVerified: false,
@@ -48,7 +46,7 @@ const signUp = async (req, res, next) => {
   const clientInstance = new Client(userInstance);
   clientInstance.companyName = req.body.companyName;
   clientInstance.companyPhone = req.body.companyPhone;
-  clientInstance.companyEmail = req.body.email;
+  clientInstance.companyEmail = req.body.companyEmail;
   clientInstance.companyRefNo = userInstance.companyRefNo;
   clientInstance.state = req.body.state;
   clientInstance.numberOfEmployee = "50";
@@ -65,6 +63,8 @@ const signUp = async (req, res, next) => {
 
 // client action for adding an employee
 const signUpEmployee= async (req, res) => {
+  const {firstName,lastName, jobTitle, email,employmentType,department,salary,hireDate} = req.body;
+  const password = `${lastName}$${email}`
   const generateID = () =>
     randomstring.generate({
       length: 4,
@@ -74,8 +74,13 @@ const signUpEmployee= async (req, res) => {
     const company = await Client.findOne({companyEmail:req.user.email});
 
     let newEmployee = {
-      email:req.body.email,
-      fullname: req.body.fullname,
+      email,
+      firstName,
+      lastName,
+      hireDate,
+      jobTitle,
+      employmentType,
+      department,
       userType: "CL05",
       employeeID: `CL05-${generateID()}`,
       companyRefNo: company.companyRefNo,
@@ -84,7 +89,7 @@ const signUpEmployee= async (req, res) => {
     }
 //create auth account for signing in
     const userInstance = new User(newEmployee);
-    User.register(userInstance, req.body.password, (error, user) => {
+    User.register(userInstance, password, (error, user) => {
       if (error) {
        
         return res.status(500);
@@ -93,10 +98,9 @@ const signUpEmployee= async (req, res) => {
 
     const employeeInstance = new Employees(newEmployee)
     const employed = await employeeInstance.save();
-
     company.employees.push(employed._id);
     await company.save();
-    res.send("all good")
+    res.json({code:200, msg:"all good"})
 
 
 };

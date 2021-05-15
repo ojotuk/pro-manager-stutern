@@ -2,29 +2,35 @@ const Profiles = require('./../../../models/Profiles')
 const Leaves = require('./../../../models/Leaves')
 const Company = require('./../../../models/Clients')
 const Employees = require('./../../../models/Employees')
+const User = require('./../../../models/User');
 
 
-
-// add leaves
+// employees
 const getEmployees = async (req,res)=>{
     const {email} = req.user;
     const client = await Company.findOne({companyEmail:email}).populate(['employees'])
+    if(client){
+        return res.json({client, code:200});
+    }
+    return res.json({profile:[], code:404});
         
-        res.json({client, code:200});
 }
 
 //Get an emplyee profile
 const getEmployee = async (req,res)=>{
     const clientRef = req.user.clientRefNo;
-    // const {id} = req.params;
-    const id = "608451938b3468065806d85d"
+    const {id} = req.params;
+    // const id = "608451938b3468065806d85d"
     // console.log(id);
-    const user =await Employees.findOne({_id:id}).populate('company');
-    
+    const user =await Employees.findOne({_id:id}).populate(['company','task']);
+    if(user){
+        return res.json({profile:user, code:200});
+    }
+    return res.json({profile:[], code:404});
        
-        res.json({profile:user, code:200});
     
 }
+
 
 
 

@@ -1,21 +1,23 @@
 const mongoose = require("./init");
 const passportLocalMongoose = require("passport-local-mongoose");
+const Employees = require("./Employees")
 
+
+// 
 const TaskSchema = new mongoose.Schema({
   title: {
     type: String,
     required:true
   },
-  teams: {
-    type: Array,
-    default: [],
-  },
-  ends:{
+  teams:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'Employees'
+  }],
+  end:{
     type: String,
-    required: true,
+    default:""
   },
-  email:{type:String, unique:false},
-  commence: {
+  start: {
     type: String,
     required:true
   },
@@ -23,25 +25,19 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  name: {
-    type: String,
-    required:true,
+  progress:{
+    type:Number,
+    default:0
   },
-  assignedBy:{
-    type: String,
-    required:true,
+  teamLead:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"Employees",
   },
-  supervisedBy:{
-    type: String,
-    required:true,
+  company:{
+    type:String,
+    require:true,
   }
 });
 
 
 const Task = (module.exports = mongoose.model("Task", TaskSchema));
-
-
-// supervisedBy: {
-//     type: String,
-//     default: "",
-//   },

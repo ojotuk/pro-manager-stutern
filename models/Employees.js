@@ -11,7 +11,7 @@ const employeeSchema = new mongoose.Schema({
   },
   bankInfo: {
     type: Object,
-    default: { bankName: "", bankAcctNo: "", ifcsCode: "", panCode: "" },
+    default: { bankName: "", bankAcctNo: "" },
   },
   basicSalaryInfo: {
     type: Object,
@@ -30,6 +30,10 @@ const employeeSchema = new mongoose.Schema({
     type:Schema.Types.ObjectId,
     ref:'Leaves'
   }],
+  task:[{
+    type:Schema.Types.ObjectId,
+    ref:'Task'
+  }],
   company:{
     type:Schema.Types.ObjectId,
     ref:'Company'
@@ -43,12 +47,28 @@ const employeeSchema = new mongoose.Schema({
     default: false,
   },
   emergencyContact: {
-    type: Object,
-    default: { name: "", phone: "", address: "", relationship: "" },
+    type: Array,
+    default: [{ name: "", address: "", relationship: "" },{ name: "",address: "", relationship: "" }]
+  },
+  department:{
+    type: String,
+    required:true,
+  },
+  hireDate:{
+    type: String,
+    required:true,
   },
   employeeID: {
     type: String,
-    default: "",
+    required:true,
+  },
+  jobTitle: {
+    type: String,
+    required:true,
+  },
+  employmentType:{
+    type: String,
+    required:true,
   },
   gender: {
     type: String,
@@ -58,20 +78,17 @@ const employeeSchema = new mongoose.Schema({
       type:Array,
       default:[]
   },
-  name: { type: String, default: "" },
   firstName:{
-    type: String, default: ""
+    type: String,
+    required:true
   },
-  surname:{
-    type: String, default: ""
+  lastName:{
+    type: String,
+    required:true
   },
   position: {
     type: String,
     default: "",
-  },
-  task: {
-    type: Array,
-    default: [],
   },
   permissions: {
     type: Array,
@@ -84,6 +101,18 @@ const employeeSchema = new mongoose.Schema({
   phone: {
     type: String,
     default: "",
+  },
+  dob:{
+    type:String,
+    default:"01/01/1970"
+  },
+  workPhone:{
+    type:String,
+    default:""
+  },
+  workEmail:{
+    type:String,
+    default:""
   },
   supervisedBy: {
     type: String,
