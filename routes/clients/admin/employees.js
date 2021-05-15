@@ -11,7 +11,7 @@ router.get('/app/v2/004/all-employees', requireJWT, Controller.getEmployees)
 
 
 //Get an emplyee profile
-router.get('/app/v2/004/employee/profile', requireJWT,Controller.getEmployee)
+router.get('/app/v2/004/employee/profile/:id', requireJWT,Controller.getEmployee)
 // router.get('/app/v2/004/employee/profile/:id', requireJWT,Controller.getEmployee)
 
 

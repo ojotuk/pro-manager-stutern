@@ -63,6 +63,8 @@ const signUp = async (req, res, next) => {
 
 // client action for adding an employee
 const signUpEmployee= async (req, res) => {
+  const {firstName,lastName, jobTitle, email,employmentType,department,salary,hireDate} = req.body;
+  const password = `${lastName}$${email}`
   const generateID = () =>
     randomstring.generate({
       length: 4,
@@ -72,8 +74,13 @@ const signUpEmployee= async (req, res) => {
     const company = await Client.findOne({companyEmail:req.user.email});
 
     let newEmployee = {
-      email:req.body.email,
-      fullname: req.body.fullname,
+      email,
+      firstName,
+      lastName,
+      hireDate,
+      jobTitle,
+      employmentType,
+      department,
       userType: "CL05",
       employeeID: `CL05-${generateID()}`,
       companyRefNo: company.companyRefNo,
@@ -82,7 +89,7 @@ const signUpEmployee= async (req, res) => {
     }
 //create auth account for signing in
     const userInstance = new User(newEmployee);
-    User.register(userInstance, req.body.password, (error, user) => {
+    User.register(userInstance, password, (error, user) => {
       if (error) {
        
         return res.status(500);
@@ -91,10 +98,9 @@ const signUpEmployee= async (req, res) => {
 
     const employeeInstance = new Employees(newEmployee)
     const employed = await employeeInstance.save();
-
     company.employees.push(employed._id);
     await company.save();
-    res.send("all good")
+    res.json({code:200, msg:"all good"})
 
 
 };

@@ -1,67 +1,52 @@
 const Profiles = require('./../../../models/Profiles')
 const Leaves = require('./../../../models/Leaves')
-const Task = require('../../../models/Task')   
+const Task = require('../../../models/Task')
+const Employees = require('../../../models/Employees')
 
 // add leaves
 const assignTask = async (req,res)=>{
     const {
-        to,
-        name,
-        email,
         title,
         description,
-        commence,
-        ends,
+        end,
+        start,
         teams,
+        teamLead
       } = req.body;
+// console.log(req.body)
+      const teamIDs = teams.map(item=>item._id);
+      const teamLeadID=teamLead._id;
+      const allTeam = [...teamIDs,teamLeadID]
+// console.log(teamIDs)
+      // 
       const newTask = {
-        name,
         title,
         description,
-        commence,
-        ends,
-        teams,
-        assignedBy: req.user.email,
-        supervisedBy: email,
+        end,
+        start,
+        teams:allTeam,
+        company: req.user.email,
+        teamLead: teamLeadID,
       };
       const taskInstance = new Task(newTask);
       taskInstance.save((error, doc) => {
         if (error) {
           return res.json({ code: 400, error });
         }
-        console.log(to);
-        // save to supervisor profile
-        Profile.findById(to, (error, document) => {
-          if (error) {
-            return res.json({ code: 400, error });
+        // grab task id
+        const taskId = taskInstance._id;
+        // Save to each employee profile for ref
+        allTeam.forEach(async (team)=>{
+          let user =await Employees.findById(team);
+          if(user){
+            user.task.push(taskId);
+            user.markModified('task')
+            user.save()
           }
-          let profile = document;
-          if (profile) {
-            // push task, push notification
-            profile.task.push(doc);
-            profile.save();
-          }
-        });
-    
-          // save to each team profile
-          const teamsArr= teams.split(',')
-          for (let team of teamsArr ){
-              console.log(team,teamsArr)
-            Profile.findOne({ email: team }, (err, docs) => {
-              if (err) {
-                return res.json({ code: 400, err });
-              }
-              let profile = docs;
-              if (docs) {
-                // push task, push notification
-                profile.task.push(taskInstance);
-                profile.save();
-              }
-            });
-          }
-          res.json({ code: 200, message: "message sent" });
-    
-        // res.json({code:200,doc})
+        
+        })
+        //
+        return res.json({code:201,doc})
       });
 }
 

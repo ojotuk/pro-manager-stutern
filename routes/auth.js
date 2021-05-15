@@ -14,7 +14,7 @@ const router = express.Router()
 router.post('/auth/signup', signUp, signJWTForCompany)
 
 // Sign up an employee
-router.post('/auth/sign-up/004/add', requireJWT,signUpEmployee)
+router.post('/auth/sign-up/005/add', requireJWT,signUpEmployee)
 
 
 
