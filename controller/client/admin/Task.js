@@ -2,6 +2,7 @@ const Profiles = require('./../../../models/Profiles')
 const Leaves = require('./../../../models/Leaves')
 const Task = require('../../../models/Task')
 const Employees = require('../../../models/Employees')
+const Company = require('../../../models/Clients')
 
 // add leaves
 const assignTask = async (req,res)=>{
@@ -29,7 +30,7 @@ const assignTask = async (req,res)=>{
         teamLead: teamLeadID,
       };
       const taskInstance = new Task(newTask);
-      taskInstance.save((error, doc) => {
+      taskInstance.save(async (error, doc) => {
         if (error) {
           return res.json({ code: 400, error });
         }
@@ -43,17 +44,37 @@ const assignTask = async (req,res)=>{
             user.markModified('task')
             user.save()
           }
-        
         })
+      const company = await Company.findOne({companyEmail:req.user.email});
+      if(company){
+        company.tasks.push(taskId);
+        company.markModified('tasks')
+        company.save()
+      }
         //
         return res.json({code:201,doc})
       });
 }
 
+const getTask = async (req,res)=>{
+  const {email} = req.user;
+  try {
+    const tasks =await Task.find({company:email}).populate(['teams','teamLead']);
+    // console.log(tasks)
+    if(tasks){
+      return res.json({tasks,code:201})
+    }
+    return res.json({code:404,tasks:[]})
+  } catch (error) {
+    return res.json({code:500,error}) 
+  }
+
+}
 
 
 
 
 module.exports = {
-    assignTask
+    assignTask,
+    getTask
 }
