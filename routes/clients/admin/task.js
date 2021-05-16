@@ -7,5 +7,6 @@ const router = express.Router();
 
 //assign new task
 router.post("/app/v2/004/new-task", requireJWT, Controller.assignTask);
+router.get("/app/v2/004/all-task", requireJWT, Controller.getTask);
 
 module.exports = router;

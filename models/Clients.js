@@ -33,6 +33,10 @@ const companySchema = new mongoose.Schema({
         type:Schema.Types.ObjectId,
         ref:'Employees'
       }],
+  tasks:[{
+        type:Schema.Types.ObjectId,
+        ref:'Task'
+      }],
 });
 
 
