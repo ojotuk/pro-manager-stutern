@@ -4,7 +4,6 @@ const {
   signIn,
   requireJWT,
   signJWTForCompany,
-  signJWTForUserEmployee,
   signUpEmployee
 } = require('../middleware/auth')
 
@@ -21,7 +20,7 @@ router.post('/auth/sign-up/005/add', requireJWT,signUpEmployee)
 // Sign in client
 router.post('/auth/signin', signIn, signJWTForCompany)
 // Sign in employee
-router.post('/auth/client/005', signIn, signJWTForUserEmployee);
+// router.post('/auth/client/005', signIn, signJWTForUserEmployee);
 
 
 module.exports = router

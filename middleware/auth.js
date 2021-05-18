@@ -81,6 +81,7 @@ const signUpEmployee= async (req, res) => {
       jobTitle,
       employmentType,
       department,
+      salary,
       userType: "CL05",
       employeeID: `CL05-${generateID()}`,
       companyRefNo: company.companyRefNo,
@@ -108,12 +109,8 @@ const signUpEmployee= async (req, res) => {
 /*                  SIGN JWTS                        */
 //Clients
 const signJWTForCompany = (req, res) => {
-  // console.log('signing jwt', req.user)
   const user = req.user;
   const { email, userType } = user;
-  // console.log(userType)
-  if (userType !== "CL04")
-    return res.status(400).json({ msg: "not authorized" });
   const token = JWT.sign(
     {
       email: email,
@@ -182,5 +179,4 @@ module.exports = {
   signIn: passport.authenticate("local", { session: false }),
   requireJWT: passport.authenticate("jwt", { session: false }),
   signJWTForCompany,
-  signJWTForUserEmployee,
 };
