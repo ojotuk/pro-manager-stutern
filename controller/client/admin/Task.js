@@ -59,7 +59,13 @@ const assignTask = async (req,res)=>{
 const getTask = async (req,res)=>{
   const {email} = req.user;
   try {
-    const tasks =await Task.find({company:email}).populate(['teams','teamLead']);
+    const tasks =await Task.find({company:email}).populate([{
+    path:'teams',
+    select:['firstName','lastName']
+    },{
+     path:'teamLead',
+     select:['firstName','lastName']
+    }]);
     // console.log(tasks)
     if(tasks){
       return res.json({tasks,code:201})
