@@ -64,7 +64,7 @@ const signUp = async (req, res, next) => {
 // client action for adding an employee
 const signUpEmployee= async (req, res) => {
   const {firstName,lastName, jobTitle, email,employmentType,department,salary,hireDate} = req.body;
-  const password = `${lastName}$${email}`
+  const password = `1234567890`
   const generateID = () =>
     randomstring.generate({
       length: 4,
