@@ -6,7 +6,7 @@ const Profiles = require("./Profiles");
 const leaveSchema = new mongoose.Schema({
   type: {
     type: String,
-    default: "lest leaves",
+    required: true,
   },
   commence: {
     type: String,
@@ -16,16 +16,26 @@ const leaveSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  notes:{
+type:String,
+required: true,
+
+  },
   isApproved: {
     type: Boolean,
     default: false,
   },
-  email: {
+  status:{
     type: String,
+    default: "REQUESTED",
+  },
+  company: {
+    type: String,
+    required:true
   },
   applicant: {
     type: Schema.Types.ObjectId,
-    ref: "Profiles",
+    ref: "Employees",
   },
 });
 

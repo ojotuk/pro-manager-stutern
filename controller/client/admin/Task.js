@@ -17,7 +17,14 @@ const assignTask = async (req,res)=>{
 // console.log(req.body)
       const teamIDs = teams.map(item=>item._id);
       const teamLeadID=teamLead._id;
-      const allTeam = [...teamIDs,teamLeadID]
+      const allTeam = [...teamIDs,teamLeadID];
+      //remove duplicate Ids for use case "when task is assigned from main task panel"
+      let noDuplicateIds=[];
+      allTeam.forEach(ids=>{
+        if(!noDuplicateIds.includes(ids)){
+          noDuplicateIds.push(ids)
+        }
+      })
 // console.log(teamIDs)
       // 
       const newTask = {
@@ -25,7 +32,7 @@ const assignTask = async (req,res)=>{
         description,
         end,
         start,
-        teams:allTeam,
+        teams:noDuplicateIds,
         company: req.user.email,
         teamLead: teamLeadID,
       };
@@ -37,7 +44,7 @@ const assignTask = async (req,res)=>{
         // grab task id
         const taskId = taskInstance._id;
         // Save to each employee profile for ref
-        allTeam.forEach(async (team)=>{
+        noDuplicateIds.forEach(async (team)=>{
           let user =await Employees.findById(team);
           if(user){
             user.task.push(taskId);

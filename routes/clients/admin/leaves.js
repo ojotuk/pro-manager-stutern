@@ -7,7 +7,7 @@ const router = express.Router()
 
 
 //C
-router.get('/app/v2/004/leave/', requireJWT, Controller.viewLeaves)
+router.get('/app/v2/004/leave/all', requireJWT, Controller.viewLeaves)
 
 
 //Get an employee leave profile

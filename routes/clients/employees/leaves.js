@@ -7,7 +7,14 @@ const router = express.Router()
 
 
 //apply leave
-router.get('/app/v2/005/leave', requireJWT, Controller.addLeave)
+router.post('/app/v2/005/leave', requireJWT, Controller.addLeave)
+
+
+//delete
+router.delete('/app/v2/005/drop/leave/:id', requireJWT, Controller.deleteLeave)
+
+//delete
+router.put('/app/v2/005/update/leave/:id', requireJWT, Controller.updateLeave)
 
 
 

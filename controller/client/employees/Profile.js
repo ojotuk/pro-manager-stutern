@@ -16,7 +16,10 @@ const myProfile = async  (req,res)=>{
                 path:'teamLead',
                 select:['firstName','lastName']
             }]
-        },{path:'company',select:['companyName']}]);
+        },
+        {path:'company',select:['companyName','companyEmail']},
+        {path:'leaves'}
+    ]);
         if(employee) return res.json(employee)
     } catch (error) {
         return res.json(error)
