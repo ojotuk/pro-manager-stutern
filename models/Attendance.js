@@ -3,44 +3,39 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const Schema = mongoose.Schema;
 const Profiles = require("./Profiles");
 
-const leaveSchema = new mongoose.Schema({
-  type: {
+const attendanceSchema = new mongoose.Schema({
+  date: {
     type: String,
     required: true,
   },
-  commence: {
+  expectedCheckIn: {
     type: String,
-    required: true,
+    default: "8:00 AM",
   },
-  ends: {
+  expectedCheckOut: {
     type: String,
-    required: true,
+    default: "4:00 PM",
+    
   },
-  notes:{
-type:String,
-required: true,
-
+  checkIn: {
+    type: String,
+    default: true,
   },
-  isAttended: {
+  checkOut: {
     type: Boolean,
     default: false,
   },
-  status:{
-    type: String,
-    default: "REQUESTED",
-  },
   company: {
     type: String,
-    required:true
+    required: true,
   },
   applicant: {
     type: Schema.Types.ObjectId,
     ref: "Employees",
   },
-  rejectReason:{
-    type: String,
-    default:""
-  }
 });
 
-const Profile = (module.exports = mongoose.model("Leaves", leaveSchema));
+const Profile = (module.exports = mongoose.model(
+  "Attendance",
+  attendanceSchema
+));
