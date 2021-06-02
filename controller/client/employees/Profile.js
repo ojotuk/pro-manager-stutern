@@ -18,7 +18,8 @@ const myProfile = async  (req,res)=>{
             }]
         },
         {path:'company',select:['companyName','companyEmail']},
-        {path:'leaves'}
+        {path:'leaves'},
+        {path:'attendance'},
     ]);
         if(employee) return res.json(employee)
     } catch (error) {

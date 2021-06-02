@@ -10,7 +10,7 @@ router.post('/app/v2/005/attendance/check-in', requireJWT, Controller.checkIn)
 
 
 //check out
-router.post('/app/v2/005/drop/attendannce/:id', requireJWT, Controller.checkOut)
+router.post('/app/v2/005/attendance/check-out', requireJWT, Controller.checkOut)
 
 
 

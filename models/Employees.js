@@ -26,6 +26,10 @@ const employeeSchema = new mongoose.Schema({
     required: true,
   },
   email: { type: String, index: true, unique: true },
+  attendance:[{
+    type:Schema.Types.ObjectId,
+    ref:'Attendance'
+  }],
   leaves:[{
     type:Schema.Types.ObjectId,
     ref:'Leaves'

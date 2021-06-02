@@ -28,6 +28,7 @@ app.use([
   require("./routes/clients/admin/leaves"),
   require("./routes/clients/employees/task"),
   require("./routes/clients/employees/leaves"),
+  require("./routes/clients/employees/attendance"),
   require("./routes/clients/employees/profile")
 ]);
 

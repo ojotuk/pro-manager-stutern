@@ -18,12 +18,12 @@ const attendanceSchema = new mongoose.Schema({
     
   },
   checkIn: {
-    type: String,
-    default: true,
+    type: Number,
+    required: true,
   },
   checkOut: {
-    type: Boolean,
-    default: false,
+    type: Number,
+    default: "",
   },
   company: {
     type: String,
