@@ -7,11 +7,8 @@ const router = express.Router()
 
 
 //C
-router.get('/app/v2/004/leave/all', requireJWT, Controller.viewLeaves)
+router.get('/app/v2/004/attendance/all', requireJWT, Controller.viewAttendance)
 
-
-//Update leave request
-router.put('/app/v2/004/leave/update/:id', requireJWT,Controller.approveLeave)
 
 
 

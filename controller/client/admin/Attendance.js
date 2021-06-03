@@ -1,39 +1,27 @@
-const Profiles = require("../../../models/Profiles");
-const Leaves = require("../../../models/Leaves");
+const Clients = require("../../../models/Clients");
+const Attendance = require("../../../models/Attendance");
 
-// approve
-const approveLeave = async (req, res) => {
-  const { decision,  reason } = req.body;
-  const id = req.params.id;
-  const { userType } = req.user;
-  if (userType !== "CL04")
-    return res.status(400).json({ msg: "access denied" });
-  try {
-    const application = await Leaves.findOne({ _id: id });
-    application.status = decision;
-    application.isAttended=true;
-    if(reason){
-        application.rejectReason=reason
-    }
-    const update = await application.save();
-    return res.status(201).json({ message: "ok", update });
-  } catch (error) {
-    return res.status(500).json({ message: "not ok" });
-  }
-};
 
-const viewLeaves = async (req, res) => {
+
+const viewAttendance = async (req, res) => {
   const { email, userType } = req.user;
   if (userType !== "CL04")
     return res.status(400).json({ msg: "access denied" });
-  const applications = await Leaves.find({ company: email }).populate(
-    "applicant"
-  );
-
-  res.json({ applications });
+    try {
+      const client = await Clients.findOne({companyEmail:email});
+      if(!client) return res.status(404).json({message:"Client not found"})
+      // console.log(client)
+      const clientId= client._id;
+      const applications = await Attendance.find({ company: clientId }).populate(
+      "applicant"
+    );
+    return res.json({ applications });
+    } catch (error) {
+     return res.status(500) 
+    }
+  
 };
 
 module.exports = {
-  approveLeave,
-  viewLeaves,
+  viewAttendance,
 };
