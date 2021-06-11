@@ -16,31 +16,34 @@ const leaveSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  notes:{
-type:String,
-required: true,
-
+  dateApplied:{
+    type:Number,
+    default: Date.now()
+  },
+  notes: {
+    type: String,
+    required: true,
   },
   isAttended: {
     type: Boolean,
     default: false,
   },
-  status:{
+  status: {
     type: String,
     default: "REQUESTED",
   },
   company: {
     type: String,
-    required:true
+    required: true,
   },
   applicant: {
     type: Schema.Types.ObjectId,
     ref: "Employees",
   },
-  rejectReason:{
+  rejectReason: {
     type: String,
-    default:""
-  }
+    default: "",
+  },
 });
 
 const Profile = (module.exports = mongoose.model("Leaves", leaveSchema));
