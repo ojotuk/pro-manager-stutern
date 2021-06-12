@@ -34,6 +34,10 @@ const employeeSchema = new mongoose.Schema({
     type:Schema.Types.ObjectId,
     ref:'Leaves'
   }],
+  memo:[{
+    type:Schema.Types.ObjectId,
+    ref:'TimeSheet'
+  }],
   task:[{
     type:Schema.Types.ObjectId,
     ref:'Task'

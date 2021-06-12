@@ -33,6 +33,10 @@ const companySchema = new mongoose.Schema({
         type:Schema.Types.ObjectId,
         ref:'Employees'
       }],
+  memo:[{
+        type:Schema.Types.ObjectId,
+        ref:'TimeSheet'
+      }],
   tasks:[{
         type:Schema.Types.ObjectId,
         ref:'Task'

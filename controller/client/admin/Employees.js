@@ -15,11 +15,12 @@ const getEmployees = async (req, res) => {
         path: "teams",
       },
     },
+    "memo"
   ]);
   if (client) {
     return res.json({ client, code: 200 });
   }
-  return res.json({ profile: [], code: 404 });
+  return res.json({ client: [], code: 404 });
 };
 
 //Get an emplyee profile
